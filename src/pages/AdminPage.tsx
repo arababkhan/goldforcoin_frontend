@@ -48,6 +48,7 @@ export default function AdminPage() {
           decimals = 6
         const erc20UsdtContract = getContract(usdtAddress || '', erc20Abi, signerOrProvider)
         const erc20UsdcContract = getContract(usdcAddress || '', erc20Abi, signerOrProvider)
+        console.log(erc20UsdtContract)
         try {
           let w_balance = await erc20UsdtContract.balanceOf(contract_address)
           w_balance = coins(w_balance.toString(), decimals)
