@@ -49,7 +49,7 @@ export default function MarketplacePage() {
   const [goldShipQuantity, setGoldShipQuantity] = useState(1)
   const [goldStorageWeight, setGoldStorageWeight] = useState(1)
   const [goldStorageQuantity, setGoldStorageQuantity] = useState(1)
-  const [chain, setChain] = useState(0)
+  const [chain, setChain] = useState(5)
   const [coin, setCoin] = useState('usdt')
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
@@ -84,7 +84,7 @@ export default function MarketplacePage() {
       setCountry(w_countriesForShip.length > 0 ? w_countriesForShip[0].value : (w_countriesForStorage.length > 0 ? w_countriesForStorage[0].value : ''))
       setCountriesForShip(w_countriesForShip)
       setCountriesForStorage(w_countriesForStorage)
-      setChain(chainId || 56)
+      setChain(chainId ? chainId : 5)
     }
     getInitalValues()
   }, [])
