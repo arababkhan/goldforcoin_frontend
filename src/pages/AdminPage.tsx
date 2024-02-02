@@ -41,6 +41,7 @@ export default function AdminPage() {
 
   useEffect(() => {
     async function getBalance() {
+      console.log(usdtAddress)
       if(!!signerOrProvider && account && contract_address) {
         let decimals = 18
         if(chainId === 1 || chainId === 5)
