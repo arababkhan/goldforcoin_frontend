@@ -68,7 +68,7 @@ export default function AdminPage() {
     } else {
       getBalance()
     }
-  }, [user.account])
+  }, [user.account, chainId])
 
   const handleSetAdmin = () => {
     if(!adminAddress) {
