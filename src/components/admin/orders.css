@@ -1,0 +1,6 @@
+.ant-table-wrapper .ant-table {
+    color: black !important;
+}
+.ant-table-wrapper .ant-table-thead >tr>th {
+    color: black !important;
+}
