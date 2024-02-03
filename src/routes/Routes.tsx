@@ -10,6 +10,7 @@ import {UserData} from '../types/userType';
 
 const MarketplacePage = lazy(() => import('../pages/MarketplacePage'))
 const AdminPage = lazy(() => import('../pages/AdminPage'))
+const OrderPage = lazy(() => import('../pages/OrderPage'))
 const NotFoundPage = lazy(() => import('../pages/Page404'))
 
 export default function Router() {
@@ -52,6 +53,7 @@ export default function Router() {
                 <Routes>        
                     <Route path='/' element={<MarketplacePage />} />
                     <Route path='/admin' element={<AdminPage />} />
+                    <Route path='/order' element={<OrderPage />} />
                     <Route path='*' element={<NotFoundPage />} />
                 </Routes>
             </AppContext.Provider>

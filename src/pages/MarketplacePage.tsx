@@ -52,7 +52,7 @@ export default function MarketplacePage() {
   const [chain, setChain] = useState(5)
   const [coin, setCoin] = useState('usdt')
   const [email, setEmail] = useState('')
-  const [phone, setPhone] = useState('')
+  const [full_name, setfull_name] = useState('')
   const [country, setCountry] = useState('')
   const [address, setAddress] = useState('')
   const [city, setCity] = useState('')
@@ -114,8 +114,8 @@ export default function MarketplacePage() {
   const handleContactInfo = (e:any) => {
     if(e.target.name === 'email') {
       setEmail(e.target.value)
-    } else if(e.target.name === 'phone') {
-      setPhone(e.target.value)
+    } else if(e.target.name === 'full_name') {
+      setfull_name(e.target.value)
     } else if(e.target.name === 'address') {
       setAddress(e.target.value)
     } else if(e.target.name === 'city') {
@@ -160,7 +160,7 @@ export default function MarketplacePage() {
 
   const handleCheckOut = async () => {
     let emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
-    if(!email || !address || !city || !postcode || !phone) {
+    if(!email || !address || !city || !postcode || !full_name) {
       notifyError("Please fill all the fields.")
       return
     } else if(!emailRegex.test(email)) {
@@ -201,8 +201,8 @@ export default function MarketplacePage() {
       let decimals = 18
       if(chainId === 1 || chainId === 5)
         decimals = 6
-      const temp = 1
-      const newAllowance = units(temp.toString(), decimals)
+
+      const newAllowance = units(totalCost.toString(), decimals)
       const contract = getContract(contract_address, contractAbi, signerOrProvider);
       const erc20Contract = getContract((coin === 'usdt' ? usdtAddress ||'' : usdcAddress ||''), erc20Abi, signerOrProvider)
       try {
@@ -213,7 +213,7 @@ export default function MarketplacePage() {
         let w_balance = await erc20Contract.balanceOf(account)
         w_balance = coins(w_balance.toString(), decimals)
         
-        if(w_balance > temp) {
+        if(w_balance > totalCost) {
           const funcDepositTx = await contract.deposit(newAllowance, coin === 'usdt' ? true : false);
           funcDepositTx? handleTransaction(funcDepositTx.hash, TransactionType.deposit) : clearTransaction();
           w_res = await funcDepositTx.wait();
@@ -223,9 +223,9 @@ export default function MarketplacePage() {
             return w_prod
           })     
           let w_order: Order = {
-            user: account,
+            user: account.toLowerCase(),
             email: email,
-            phone: phone,
+            full_name: full_name,
             country: country,
             address: address,
             city: city,
@@ -240,11 +240,15 @@ export default function MarketplacePage() {
             products: w_products
           }
           await addOrder(w_order)
+          setIsShippment(false)
+          setIsStorage(false)
+          setProducts([])
+          setTotalCost(0)
         } else {
           notifyError('You have not enough balance')
         }
-      } catch (error) {
-        console.log(error)
+      } catch (error:any) {
+        notifyError(error.reason?error.reason:'unknow error')
       }
     }    
   }
@@ -256,14 +260,13 @@ export default function MarketplacePage() {
       <Row>
         <Col xs={24} sm={24} md={10} lg={12} xl={16}>
           <div style={{marginTop: '50px'}}></div>
-          <S.Title className="main-title white">Uncover the </S.Title>
-          <S.Title className="main-title blueberry-lighter">Beauty of Gold Coins</S.Title>
-          <S.Title className="main-title white">At GOLDFORCOIN</S.Title>
+          <S.Title className="main-title white">DISCOVER THE</S.Title>
+          <S.Title className="main-title blueberry-lighter">BEAUTY OF GOLD</S.Title>
+          <S.Title className="main-title white">AT GOLDFORCRYPTO.IO</S.Title>
           <S.Paragraph className="white customMargin">
-            Welcome to GOLDFORCOIN, your trusted destination to buy gold by coins! Immerse yourself in
-            the elegance of owning precious gold in its physical form, delivered right to your doorstep. Our
-            seamless process allows you to choose from a variety of payment options, including Ethereum
-            (ETH), Binance Coin (BNB), Tether (USDT), and USD Coin (USDC).
+            Welcome to GOLDFORCRYPTO, your trusted destination to buy gold by crypto! Immerse yourself in
+            the elegance of owning precious gold in its physical form, delivered right to your doorstep or in a secure goldstorage in switzerland.
+            Our seamless process allows you to choose from a variety of payment options, including Tether (USDT), and USD Coin (USDC).
           </S.Paragraph>
         </Col>
         <S.Col xs={24} sm={24} md={14} lg={12} xl={8} className="goldImageCol">
@@ -427,8 +430,8 @@ export default function MarketplacePage() {
         </Col>
         <Col xs={{ span: 24, offset: 0 }} sm={{ span: 24, offset: 0 }} md={{ span: 16, offset: 4 }} lg={{ span: 12, offset: 6 }}>
           <Row justify={'space-between'} style={{margin: '10px 0px'}}>
-            <S.Input name="email" value={email} onChange={handleContactInfo} placeholder='Email'/>
-            <S.Input name="phone" value={phone} onChange={handleContactInfo} placeholder='Phone Number'/>
+            <S.Input name="email" value={email} onChange={handleContactInfo} placeholder='Email*'/>
+            <S.Input name="full_name" value={full_name} onChange={handleContactInfo} placeholder='Full Name*'/>
           </Row>
           <Row justify={'space-between'} style={{margin: '10px 0px'}}>
             <S.Select
@@ -437,11 +440,11 @@ export default function MarketplacePage() {
               onChange={handleContactInfo}
               options={isShippment? countriesForShip : countriesForStorage}
             />
-            <S.Input name="address" value={address} onChange={handleContactInfo} placeholder='Address'/>
+            <S.Input name="address" value={address} onChange={handleContactInfo} placeholder='Address*'/>
           </Row>
           <Row justify={'space-between'} style={{margin: '10px 0px'}}>
-            <S.Input name="city" value={city} onChange={handleContactInfo} placeholder='City'/>
-            <S.Input name="postcode" value={postcode} onChange={handleContactInfo} placeholder='Post Code'/>
+            <S.Input name="city" value={city} onChange={handleContactInfo} placeholder='City*'/>
+            <S.Input name="postcode" value={postcode} onChange={handleContactInfo} placeholder='Post Code*'/>
           </Row>
         </Col>
         <Col xs={{ span: 24, offset: 0 }} sm={{ span: 24, offset: 0 }} md={{ span: 16, offset: 4 }} lg={{ span: 12, offset: 6 }}>
@@ -502,6 +505,9 @@ export const S = {
   Paragraph: styled(Paragraph)`
     font-size: 16px;
     font-family: 'Changa';
+    @media (min-width: ${props => props.theme.viewport.desktopXl}) {
+      font-size: 22px;
+    }
     &.white {
       color: ${props=>props.theme.white};
     } 
@@ -621,8 +627,11 @@ export const S = {
       border-radius: 5px;
       background-color: #23173e;
       padding: 50px 10px;
+      @media (max-width: ${props => props.theme.viewport.desktopXl}) {
+        padding: 50px 30px;
+      }
       @media (max-width: ${props => props.theme.viewport.desktopl}) {
-        padding: 30px 10px;
+        padding: 25px 20px;
       }
       @media (max-width: ${props => props.theme.viewport.desktop}) {
         padding: 20px 10px;

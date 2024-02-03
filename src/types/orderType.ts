@@ -9,7 +9,7 @@ export interface Order {
     orderId?: number
     user: string
     email: string
-    phone: string
+    full_name: string
     country: string
     address: string
     city: string
@@ -22,6 +22,11 @@ export interface Order {
     paid?: number
     transaction?: string
     status: string
+    tracking_number?: string
     created?: Date
     products: Product[] 
 }
+
+export enum OrderStatus {
+    pending = 'pending', processing = 'processing', shipping = 'shipping', delivered = 'delivered'
+  }

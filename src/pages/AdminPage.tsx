@@ -41,14 +41,12 @@ export default function AdminPage() {
 
   useEffect(() => {
     async function getBalance() {
-      console.log(usdtAddress)
       if(!!signerOrProvider && account && contract_address) {
         let decimals = 18
         if(chainId === 1 || chainId === 5)
           decimals = 6
         const erc20UsdtContract = getContract(usdtAddress || '', erc20Abi, signerOrProvider)
         const erc20UsdcContract = getContract(usdcAddress || '', erc20Abi, signerOrProvider)
-        console.log(erc20UsdtContract)
         try {
           let w_balance = await erc20UsdtContract.balanceOf(contract_address)
           w_balance = coins(w_balance.toString(), decimals)

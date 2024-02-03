@@ -1,9 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import {
-  RadioGroup,
-  Radio,
-  Grid,
-  FormControlLabel,
   Table,
   TableBody,
   TableCell,
@@ -18,61 +14,26 @@ import {
   InputAdornment,
   TextField,
   Button,
-  Dialog,
-  DialogContent,
-  DialogActions
 } from '@mui/material';
 import { MdKeyboardArrowDown } from 'react-icons/md'
-import { AiFillSetting, AiOutlineSearch, AiFillCloseCircle } from 'react-icons/ai'
-import { getOrders, updateOrder } from '../../services/OrderService'
-import { Order, Product, OrderStatus } from '../../types/orderType';
+import { AiOutlineSearch } from 'react-icons/ai'
+import { getMyOrders } from '../services/OrderService'
+import { Order, Product } from '../types/orderType';
+import { DefaultPageTemplate } from './template/DefaultPageTemplate'
 
-export const Orders = () => {
+export default function OrderPage () {
     const [openOrderId, setOpenOrderId] = useState(0);
     const [searchQuery, setSearchQuery] = useState("");
     const [orders, setOrders] = useState<Order[]>([])
-    const [selectedOrder, setSelectedOrder] = useState(0)
-    const [stateValue, setStateValue] = useState('pending')
-    const [isSelectStateModal, setIsSelectStateModal] = useState(false)
-    const [isInputTrackingModal, setIsInputTrackingModal] = useState(false)
-    const optionsData = [{value: OrderStatus.pending, label: OrderStatus.pending}, {value: OrderStatus.processing, label: OrderStatus.processing}, {value: OrderStatus.shipping, label: OrderStatus.shipping}, {value: OrderStatus.delivered, label: OrderStatus.delivered}]
-    const [trackingNumber, setTrackingNumber] = useState('')
 
     const handleSearchInputChange = (event:any) => {
         setSearchQuery(event.target.value);
     };
-    const handleTrackingNumberChange = (event: any) => {
-        setTrackingNumber(event.target.value)
-    }
-    const handleState = (id: number) => {
-        setSelectedOrder(id)
-        setIsSelectStateModal(true)
-    }
-    const handleOrderState = async () => {
-        setIsSelectStateModal(false)
-        if(stateValue === OrderStatus.shipping) {
-          setIsInputTrackingModal(true)
-        } else {
-          setOrders(orders.map((order) => order.orderId === selectedOrder ? { ...order, status: stateValue } : order))
-          await updateOrder(selectedOrder || 0, stateValue, '')
-        }
-    }
-
-    const handleChange = (event:any) => {
-        setStateValue(event.target.value);
-    }
-
-    const handleTrackingNumber = async () => {
-        setIsInputTrackingModal(false)
-        setOrders(orders.map((order) => order.orderId === selectedOrder ? { ...order, tracking_number: trackingNumber, status: stateValue } : order))
-        await updateOrder(selectedOrder || 0, stateValue, trackingNumber)
-    }
-    
     const sortedOrders = orders.sort((a, b) => new Date(b.created?b.created:new Date()).getTime() - new Date(a.created?a.created:new Date()).getTime());
     const filteredOrders = sortedOrders.filter((order) => {
-      const email = order.email?.toLowerCase();
-      const full_name = order.full_name?.toLowerCase();
-      const state = order.status?.toLowerCase();
+      const email = order.email.toLowerCase();
+      const full_name = order.full_name.toLowerCase();
+      const state = order.status.toLowerCase();
       const queries = searchQuery.toLowerCase().split(" ");
 
       return queries.every((query) => email.includes(query) || full_name.includes(query) || state.includes(query));
@@ -80,7 +41,7 @@ export const Orders = () => {
 
     useEffect(() => {
         const getOrdersData = async () => {
-            let w_orders = await getOrders()
+            let w_orders = await getMyOrders()
             setOrders(w_orders)
         } 
 
@@ -88,7 +49,8 @@ export const Orders = () => {
     }, [])
     
     return (
-      <>
+      <>      
+        <DefaultPageTemplate fullWidth marginMax> 
           <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', marginBottom: 5, marginTop: 5 }}>
               <TextField
                   id="search"
@@ -165,7 +127,6 @@ export const Orders = () => {
                                               {<MdKeyboardArrowDown />}
                                           </IconButton>
                                       </TableCell>
-
                                       <TableCell  align="center" sx={{ color: "rgba(255,255,255,0.8)", borderLeft: '1px solid white', borderBottom: '1px solid white' }}>
                                           {order.email}</TableCell>
                                       <TableCell  align="center" sx={{ color: "rgba(255,255,255,0.8)", borderLeft: '1px solid white', borderBottom: '1px solid white' }}>
@@ -175,10 +136,10 @@ export const Orders = () => {
                                       <TableCell  align="center" sx={{ color: "rgba(255,255,255,0.8)", borderLeft: '1px solid white', borderBottom: '1px solid white' }}>
                                           {order.prod_kind}</TableCell>
                                       <TableCell align="center" sx={{ color: "rgba(255,255,255,0.8)", borderLeft: '1px solid white', borderBottom: '1px solid white' }}>
-                                          {order.status === 'pending' && <Button sx={{color: 'white', backgroundColor: '#e34040', borderRadius: '5px', fontSize: '10px'}} onClick={() => handleState(order.orderId || 0)}>pending</Button>}
-                                          {order.status === 'processing' && <Button sx={{color: 'white', backgroundColor: '#0e810d', borderRadius: '5px', fontSize: '10px'}} onClick={() => handleState(order.orderId || 0)}>processing</Button>}
-                                          {order.status === 'shipping' && <Button sx={{color: 'white', backgroundColor: '#226AED', borderRadius: '5px', fontSize: '10px'}} onClick={() => handleState(order.orderId || 0)}>shipping</Button>}
-                                          {order.status === 'delivered' && <Button sx={{color: 'black', backgroundColor: '#fff', borderRadius: '5px', fontSize: '10px'}} onClick={() => handleState(order.orderId || 0)}>delivered</Button>}
+                                          {order.status === 'pending' && <Button sx={{color: 'white', backgroundColor: '#e34040', borderRadius: '5px', fontSize: '10px'}}>pending</Button>}
+                                          {order.status === 'processing' && <Button sx={{color: 'white', backgroundColor: '#0e810d', borderRadius: '5px', fontSize: '10px'}}>processing</Button>}
+                                          {order.status === 'shipping' && <Button sx={{color: 'white', backgroundColor: '#226AED', borderRadius: '5px', fontSize: '10px'}}>shipping</Button>}
+                                          {order.status === 'delivered' && <Button sx={{color: 'black', backgroundColor: '#fff', borderRadius: '5px', fontSize: '10px'}}>delivered</Button>}
                                       </TableCell>
                                       <TableCell  align="center" sx={{ color: "rgba(255,255,255,0.8)", borderLeft: '1px solid white', borderBottom: '1px solid white' }}>
                                           {order.tracking_number}</TableCell>
@@ -268,88 +229,7 @@ export const Orders = () => {
                   </Table>
               </TableContainer>
           </Paper>
-          <Dialog
-            open={isSelectStateModal}
-            keepMounted
-            onClose={() => setIsSelectStateModal(false)}
-            aria-describedby="alert-dialog-slide-description"
-          >
-            {/* <DialogTitle>{"Use Google's location service?"}</DialogTitle> */}
-            <DialogContent sx={{ width: 300, backgroundColor: '#23173e' }}>
-                <RadioGroup
-                    aria-label="gold options"
-                    value={stateValue}
-                    onChange={handleChange}
-                    name="radio-buttons-group"
-                    className='home-radio-group'
-                    sx={{ p: 2}}
-                >
-                    <Grid container>
-                        {optionsData.map((option, index) => (
-                        <Grid item xs={6} key={index}>
-                            <FormControlLabel sx={{color: 'white'}} value={option.value} control={<Radio sx={{
-                                color: 'white', // default color
-                                '&.Mui-checked': {
-                                color: 'secondary.main', // color when radio is checked
-                                },
-                            }}/> } label={`${option.label}`} />
-                        </Grid>
-                        ))}
-                    </Grid>
-                </RadioGroup>            
-            </DialogContent>
-            <DialogActions sx={{ display: 'flex', justifyContent: 'space-evenly', backgroundColor: '#23173e' }}>
-              <Button variant='contained' endIcon={<AiFillSetting />} color='error' onClick={handleOrderState} sx={{color: 'white', fontFamily: 'Changa'}}>Set</Button>
-              <Button variant='contained' color='primary'
-                    onClick={() => setIsSelectStateModal(false)} endIcon={<AiFillCloseCircle />} sx={{color: 'white', fontFamily: 'Changa'}}>Close</Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog
-            open={isInputTrackingModal}
-            keepMounted
-            onClose={() => setIsSelectStateModal(false)}
-            aria-describedby="alert-dialog-slide-description"
-          >
-            {/* <DialogTitle>{"Use Google's location service?"}</DialogTitle> */}
-            <DialogContent sx={{ width: 300, backgroundColor: '#23173e' }}>
-            <TextField
-                  id="tracking_number"
-                  label="Tracking Number"
-                  onChange={handleTrackingNumberChange}
-                  className="placeholder-animation"
-                  sx={{ width: { xs: 200, sm: 250, md: 250 }, 
-                      '& .MuiOutlinedInput-root': {
-                          '& fieldset': {
-                          borderColor: 'white', // normal state
-                          },
-                          '&:hover fieldset': {
-                          borderColor: 'rgb(239,38,206)', // hover state
-                          },
-                          '&.Mui-focused fieldset': {
-                          borderColor: 'rgb(239,38,206)', // focus state
-                          },
-                      },
-                      '& label.Mui-focused': {
-                          color: 'white', // Color of the label when the TextField is focused
-                          fontFamily: 'Changa'
-                      },
-                      '& label': {
-                          color: 'white', // Color of the label in the default state
-                          fontFamily: 'Changa'
-                      },
-                      '& .MuiInputBase-input': {
-                          color: 'white !important', // Change 'green' to your desired text color
-                          fontFamily: 'Changa'
-                      }, 
-                  }}
-              />         
-            </DialogContent>
-            <DialogActions sx={{ display: 'flex', justifyContent: 'space-evenly', backgroundColor: '#23173e' }}>
-              <Button variant='contained' endIcon={<AiFillSetting />} color='error' onClick={handleTrackingNumber} sx={{color: 'white', fontFamily: 'Changa'}}>Set</Button>
-              <Button variant='contained' color='primary'
-                    onClick={() => setIsInputTrackingModal(false)} endIcon={<AiFillCloseCircle />} sx={{color: 'white', fontFamily: 'Changa'}}>Close</Button>
-            </DialogActions>
-          </Dialog>
+        </DefaultPageTemplate>
       </>
     );
 }

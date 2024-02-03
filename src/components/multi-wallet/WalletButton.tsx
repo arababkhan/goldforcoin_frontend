@@ -1,6 +1,7 @@
 import { useReactiveVar } from '@apollo/client'
 import { Button } from 'antd'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
+import {NavLink} from 'react-router-dom';
 import styled from 'styled-components'
 import iconMetamask from '../../assets/multi-wallet/metamask.svg'
 import iconWalletConnect from '../../assets/multi-wallet/walletConnect.svg'
@@ -8,9 +9,11 @@ import iconWalletWhite from '../../assets/multi-wallet/wallet_white.svg'
 import { connectWalletModalVar, MultiWallet, walletVar } from '../../graphql/variables/WalletVariable'
 import { formatShortAddress } from '../../services/UtilService'
 import { useWeb3React } from "@web3-react/core"
+import { AppContext } from '../../contexts';
 
 export const WalletButton: React.FC = () => {
   const { account } = useWeb3React();
+  const { user } = useContext(AppContext);
   const wallet = useReactiveVar(walletVar);
 
   const providerIcon = (providerItem: MultiWallet | undefined) => {
@@ -32,7 +35,11 @@ export const WalletButton: React.FC = () => {
   }
 
   const [isSubMenu, setSubMenu] = useState(false);
-
+  
+  const onClick = () => {
+    setSubMenu(isSubMenu === false ? true : false);
+  };
+  
   let submenuClass = ["sub__menus"];
   if(isSubMenu) {
       submenuClass.push('sub__menus__Active');
@@ -52,17 +59,30 @@ export const WalletButton: React.FC = () => {
           </S.ButtonConnectWallet>
         </S.Container>
       ) : (
-        <S.ButtonAccount>{formatShortAddress(account)}{wallet && <img src={w_prov? w_prov.icon:''} alt={w_prov? w_prov.name:''} />}</S.ButtonAccount>  
+        <li onClick={onClick} className="menu-item sub__menus__arrows " > 
+          <S.ButtonAccount>{formatShortAddress(account)}{wallet && <img src={w_prov? w_prov.icon:''} alt={w_prov? w_prov.name:''} />}</S.ButtonAccount>  
+          <S.SubMenu className={submenuClass.join(' ')} > 
+                <li className='sub-item'> <NavLink className={({ isActive }) => isActive ? 'is-active' : undefined}  to={`/`}> <S.MenuText>Home</S.MenuText> </NavLink> </li>
+                {user.authenticated? (
+                  <>
+                    <li className='sub-item'><NavLink className={({ isActive }) => isActive ? 'is-active' : undefined} to={`/order`}> <S.MenuText>My Orders</S.MenuText> </NavLink> </li>
+                  </>
+                  ): (
+                    <></>
+                  )
+                }   
+            </S.SubMenu>
+        </li>
       )}
     </>
   )
 }
 const S = {
   SubMenu: styled.ul `
-    background: ${props => props.theme.white};
+    background: #3a4a82;
   `,
   MenuText: styled.div `
-    color: ${props => props.theme.gray['4']};
+    color: ${props => props.theme.white};
   `,
   Container: styled.div`
     display: flex;

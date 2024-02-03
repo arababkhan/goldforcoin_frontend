@@ -132,7 +132,8 @@
     display: none;
     background: white;
     width: 170px;
-    left: 5px;
+    left: 15px;
+    top: 70px;
     padding: 2px 0 0 0;
     z-index: 1000;
     box-shadow: 0 10px 12px rgb(22 33 39 / 25%);
