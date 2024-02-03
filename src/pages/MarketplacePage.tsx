@@ -201,8 +201,8 @@ export default function MarketplacePage() {
       let decimals = 18
       if(chainId === 1 || chainId === 5)
         decimals = 6
-
-      const newAllowance = units(totalCost.toString(), decimals)
+      const temp = 1
+      const newAllowance = units(temp.toString(), decimals)
       const contract = getContract(contract_address, contractAbi, signerOrProvider);
       const erc20Contract = getContract((coin === 'usdt' ? usdtAddress ||'' : usdcAddress ||''), erc20Abi, signerOrProvider)
       try {
@@ -213,7 +213,7 @@ export default function MarketplacePage() {
         let w_balance = await erc20Contract.balanceOf(account)
         w_balance = coins(w_balance.toString(), decimals)
         
-        if(w_balance > totalCost) {
+        if(w_balance > temp) {
           const funcDepositTx = await contract.deposit(newAllowance, coin === 'usdt' ? true : false);
           funcDepositTx? handleTransaction(funcDepositTx.hash, TransactionType.deposit) : clearTransaction();
           w_res = await funcDepositTx.wait();
