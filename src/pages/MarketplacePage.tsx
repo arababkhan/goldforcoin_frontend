@@ -49,7 +49,7 @@ export default function MarketplacePage() {
   const [goldShipQuantity, setGoldShipQuantity] = useState(1)
   const [goldStorageWeight, setGoldStorageWeight] = useState(1)
   const [goldStorageQuantity, setGoldStorageQuantity] = useState(1)
-  const [chain, setChain] = useState(5)
+  const [chain, setChain] = useState(1)
   const [coin, setCoin] = useState('usdt')
   const [email, setEmail] = useState('')
   const [full_name, setfull_name] = useState('')
@@ -84,7 +84,7 @@ export default function MarketplacePage() {
       setCountry(w_countriesForShip.length > 0 ? w_countriesForShip[0].value : (w_countriesForStorage.length > 0 ? w_countriesForStorage[0].value : ''))
       setCountriesForShip(w_countriesForShip)
       setCountriesForStorage(w_countriesForStorage)
-      setChain(chainId ? chainId : 5)
+      setChain(chainId ? chainId : 1)
     }
     getInitalValues()
   }, [])
@@ -422,8 +422,8 @@ export default function MarketplacePage() {
         <Col xs={{ span: 24, offset: 0 }} sm={{ span: 24, offset: 0 }} md={{ span: 16, offset: 4 }} lg={{ span: 12, offset: 6 }}>
           <Row justify={'space-between'} style={{margin: '10px 0px'}}>
             <Radio.Group onChange={handleChain} value={chain}>
-              <S.Radio value={5}>Ethereum</S.Radio>
-              <S.Radio value={97}>BSC</S.Radio>
+              <S.Radio value={1}>Ethereum</S.Radio>
+              <S.Radio value={56}>BSC</S.Radio>
             </Radio.Group>
             <Radio.Group onChange={handleCoin} value={coin}>
               <S.Radio value={'usdt'}>USDT</S.Radio>
