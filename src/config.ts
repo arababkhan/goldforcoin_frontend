@@ -31,8 +31,8 @@ export const chainsConfig: ChainConfig[] = [
     name: 'Eth mainnet',
     networkTokenSymbol: 'Eth',
     ethAddress: '0x0000000000000000000000000000000000000000',
-    contractAddress: '',
-    usdcAddress: '0x179c54e1fEa2Cd75de3Dc5fa61869B93d8C5b317',
+    contractAddress: '0xae8a068f5221c9b14ff54c990ccbc3ad95c3395c',
+    usdcAddress: '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
     usdtAddress: '0x94829DD28aE65bF4Ff6Ce3A687B1053eC7229272'
   },
   {
