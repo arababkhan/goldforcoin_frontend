@@ -7,7 +7,7 @@ export interface FooterProps {
  
 export const Footer: React.FC<FooterProps> = ({ className }: FooterProps) => {
   const handleNewOpen = () => {
-    window.open("https://neweternallife.io")
+    window.open("https://neweternallife.net")
   }
   return (
     <S.Footer className={className}>
