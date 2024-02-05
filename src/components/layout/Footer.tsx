@@ -6,9 +6,12 @@ export interface FooterProps {
 }
  
 export const Footer: React.FC<FooterProps> = ({ className }: FooterProps) => {
+  const handleNewOpen = () => {
+    window.open("https://neweternallife.io")
+  }
   return (
     <S.Footer className={className}>
-      <S.Span>Copyright @2024 GoldForCrypto.io | a part of <a href="https://neweternallife.io">NewEternalLife Ecosystem</a> All Rights Reserved</S.Span>
+      <S.Span>Copyright @2024 GoldForCrypto.io | a part of <a href="" onClick={handleNewOpen}>NewEternalLife Ecosystem</a> All Rights Reserved</S.Span>
     </S.Footer>
   )
 }

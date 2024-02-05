@@ -122,9 +122,11 @@ export default function MarketplacePage() {
       setCity(e.target.value)
     } else if(e.target.name === 'postcode') {
       setPostcode(e.target.value)
-    } else {
-      setCountry(e.target.value)
     }
+  }
+
+  const handleSetCountry = (value: any) => {
+    setCountry(value)
   }
 
   const addGoldShipCarts = () => {
@@ -438,7 +440,7 @@ export default function MarketplacePage() {
             <S.Select
               defaultValue={country}
               style={{ width: 120 }}
-              onChange={handleContactInfo}
+              onChange={handleSetCountry}
               options={isShippment? countriesForShip : countriesForStorage}
             />
             <S.Input name="address" value={address} onChange={handleContactInfo} placeholder='Address*'/>
