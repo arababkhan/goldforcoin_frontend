@@ -277,7 +277,7 @@ export default function MarketplacePage() {
         </S.Col>
       </Row>
       {!isStorage && <div>
-      <S.Title className="sub-title blueberry-lighter">Gold with Shippment</S.Title>
+      <S.Title className="sub-title blueberry-lighter">Gold bars with direct shipping</S.Title>
       <Row>
         <S.Col xs={24} sm={24} md={8} lg={8} xl={8} className="shipImageCol">
           <S.Image
@@ -327,14 +327,15 @@ export default function MarketplacePage() {
       </Row>
       </div>}
       {!isShippment && <div>
-      <S.Title className="sub-title white right">Gold Storage Switzerland</S.Title>
+      <S.Title className="sub-title white right">Secure gold storage Switzerland</S.Title>
       <Row>
         <S.Col xs={24} sm={24} md={16} lg={16} xl={16} className="panCol">
           <S.Paragraph className="white">
-            Invest securely with Swiss gold storage, offering unparalleled safety and privacy for your gold investments.
-            Switzerland's renowned banking system provides a stable and discrete option for storing precious metals, ensuring peace of mind for investors worldwide.
+            Invest in gold bars which are stored securely for you in the Swiss bonded warehouse.
+            Switzerland's renowned banking system provides a stable and discreet option for storing precious metals, offering peace of mind to investors around the world.
+            After your purchase, you will receive an issue certificate by post, which you can use to collect your gold bars at any time in Switzerland by prior arrangement. You also have the option of having your gold bars sent to you directly from the Swiss Gold Depository.
           </S.Paragraph>
-          <S.Row>
+          <S.Row className="storageRow">
             <Col xs={24} sm={8}>
               <Row justify={'center'} align={'middle'} style={{height: '100%'}}>
                 <S.Paragraph className='white price'>Price per gram: ${price}</S.Paragraph>
@@ -546,6 +547,30 @@ export const S = {
     @media (max-width: ${props => props.theme.viewport.mobile}) {
       margin: 0px 0px;
     }
+    &.storageRow {
+      margin: 30px 0px;
+      @media (max-width: 1400px) {
+        margin: 10px 0px;
+      }
+      @media (max-width: 1180px) {
+        margin: 20px 0px;
+      }
+      @media (max-width: 1155px) {
+        margin: 15px 0px;
+      }
+      @media (max-width: 1090px) {
+        margin: 10px 0px;
+      }
+      @media (max-width: 1050px) {
+        margin: 5px 0px;
+      }
+      @media (max-width: 575px) {
+        margin: 0px 0px;
+      }
+      @media (max-width: ${props => props.theme.viewport.mobile}) {
+        margin: 0px 0px;
+      }
+    }
     &.sub {
       @media (max-width: 575px) {
         padding: 0px 0px 10px;
@@ -613,8 +638,17 @@ export const S = {
     }
     &.storage {
       border-radius: 5px;
-      @media (max-width: 888px) {
-        height: 285px;
+      @media (max-width: 1440px) {
+        height: 390px;
+      }
+      @media (max-width: 1280px) {
+        height: 366px;
+      }
+      @media (max-width: 1155px) {
+        height: 356px;
+      }
+      @media (max-width: 818px) {
+        height: 382px;
       }
       @media (max-width: 767px) {
         height: auto;
