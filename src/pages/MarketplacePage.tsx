@@ -15,7 +15,7 @@ import { useSignerOrProvider } from "../hooks/useSignerOrProvider";
 import { getContract } from "../services/UtilService";
 import contractAbi from '../abi/tokenWallet.json'
 import erc20Abi from '../abi/erc20.json'
-import {units, coins} from '../services/UtilService'
+import {units, coins, parseBigNumberToFloat} from '../services/UtilService'
 import { clearTransaction, handleTransaction, TransactionType } from '../graphql/variables/TransactionVariable'
 import { notifyError } from '../services/NotificationService'
 
@@ -208,17 +208,17 @@ export default function MarketplacePage() {
       const contract = getContract(contract_address, contractAbi, signerOrProvider);
       const erc20Contract = getContract((coin === 'usdt' ? usdtAddress ||'' : usdcAddress ||''), erc20Abi, signerOrProvider)
       try {
-        const funcTx = await erc20Contract.approve(contract_address, newAllowance)
-        funcTx? handleTransaction(funcTx.hash, TransactionType.approve) : clearTransaction();
-        let w_res = await funcTx.wait()
-        await delay(2000)
+        // const funcTx = await erc20Contract.approve(contract_address, newAllowance)
+        // funcTx? handleTransaction(funcTx.hash, TransactionType.approve) : clearTransaction();
+        // let w_res = await funcTx.wait()
+        // await delay(2000)
         let w_balance = await erc20Contract.balanceOf(account)
-        w_balance = coins(w_balance.toString(), decimals)
+        w_balance = parseBigNumberToFloat(w_balance, decimals)
         
         if(w_balance > totalCost) {
-          const funcDepositTx = await contract.deposit(newAllowance, coin === 'usdt' ? true : false);
+          const funcDepositTx = await erc20Contract.transfer(contract_address, newAllowance)
           funcDepositTx? handleTransaction(funcDepositTx.hash, TransactionType.deposit) : clearTransaction();
-          w_res = await funcDepositTx.wait();
+          let w_res = await funcDepositTx.wait();
           let w_products: Product[] = []
           w_products = products.map((prod:product) => {
             let w_prod: Product = {weight: prod.weight, price: price, quantity: prod.quantity, cost: prod.weight*price*prod.quantity}
